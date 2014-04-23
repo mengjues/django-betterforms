@@ -64,7 +64,8 @@ class Fieldset(CSSClassMixin):
     def __init__(self, name, fields=[], **kwargs):
         self.name = name
         self.base_fields = tuple(process_fieldset_row(fields, type(self), name))
-
+        if "legend" in kwargs:
+            self.legend = kwargs.pop("legend")
         # Check for duplicate names.
         names = [str(thing) for thing in self.base_fields]
         duplicates = [x for x, y in Counter(names).items() if y > 1]
@@ -97,6 +98,8 @@ class BoundFieldset(object):
         self.form = form
         self.name = name
         self.fieldset = fieldset
+        if hasattr(self.fieldset, "legend"):
+            self.legend = self.fieldset.legend
         self.rows = SortedDict()
         for row in fieldset:
             self.rows[unicode(row)] = row
